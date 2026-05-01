@@ -3,6 +3,7 @@ import { getDb } from '@/lib/db';
 import { SITE } from '@/lib/site';
 
 export const metadata = { title: 'About' };
+export const dynamic = 'force-dynamic';
 
 export default function AboutPage() {
   const db = getDb();

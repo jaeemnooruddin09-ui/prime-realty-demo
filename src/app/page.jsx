@@ -4,6 +4,8 @@ import { getSiteSettings } from '@/lib/settings';
 import SearchHero from '@/components/SearchHero';
 import PropertyCard from '@/components/PropertyCard';
 
+export const dynamic = 'force-dynamic';
+
 export default function HomePage() {
   const s = getSiteSettings();
   const db = getDb();

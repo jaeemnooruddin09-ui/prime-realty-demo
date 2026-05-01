@@ -1,5 +1,7 @@
 import { getDb } from '@/lib/db';
 
+export const dynamic = 'force-dynamic';
+
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://primerealty.example';
 
 export default function sitemap() {
