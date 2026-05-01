@@ -4,6 +4,7 @@ import Footer from '@/components/Footer';
 import { LocaleProvider } from '@/components/LocaleProvider';
 import { getSiteSettings } from '@/lib/settings';
 import LiveChatWidget from '@/components/LiveChatWidget';
+import CookieConsent from '@/components/CookieConsent';
 
 export const dynamic = 'force-dynamic';
 
@@ -66,6 +67,7 @@ export default function RootLayout({ children }) {
           <main>{children}</main>
           <Footer settings={s} />
           <LiveChatWidget />
+          <CookieConsent gaId={process.env.NEXT_PUBLIC_GA_ID} />
         </LocaleProvider>
       </body>
     </html>

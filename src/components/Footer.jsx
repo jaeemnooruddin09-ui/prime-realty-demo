@@ -79,9 +79,13 @@ export default function Footer({ settings }) {
         </div>
       </div>
       <div className="border-t border-navy-800">
-        <div className="container-x py-6 flex flex-col sm:flex-row items-center justify-between text-sm text-navy-400">
+        <div className="container-x py-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-navy-400">
           <div>&copy; {new Date().getFullYear()} {name}. All rights reserved.</div>
-          <div>Boutique real estate, exceptional service.</div>
+          <div className="flex items-center gap-4">
+            <Link href="/privacy" className="hover:text-gold-300">Privacy</Link>
+            <Link href="/terms" className="hover:text-gold-300">Terms</Link>
+            <span>Boutique real estate, exceptional service.</span>
+          </div>
         </div>
       </div>
     </footer>

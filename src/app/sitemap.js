@@ -9,7 +9,7 @@ export default function sitemap() {
   const properties = db.prepare(`SELECT slug, created_at FROM properties WHERE status NOT IN ('sold', 'draft')`).all();
   const agents = db.prepare(`SELECT slug FROM agents`).all();
 
-  const staticRoutes = ['', '/properties', '/about', '/contact', '/agents'];
+  const staticRoutes = ['', '/properties', '/about', '/contact', '/agents', '/blog', '/faq', '/open-houses', '/privacy', '/terms'];
   const now = new Date();
 
   return [
