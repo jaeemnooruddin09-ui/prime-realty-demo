@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap');
+
+html, body {
+  @apply text-navy-900 bg-white antialiased;
+}
+
+.btn-primary {
+  @apply inline-flex items-center justify-center bg-navy-900 text-white px-6 py-3 rounded-md font-medium hover:bg-navy-800 transition;
+}
+.btn-gold {
+  @apply inline-flex items-center justify-center bg-gold-400 text-navy-950 px-6 py-3 rounded-md font-semibold hover:bg-gold-500 transition;
+}
+.btn-outline {
+  @apply inline-flex items-center justify-center border border-navy-900 text-navy-900 px-6 py-3 rounded-md font-medium hover:bg-navy-900 hover:text-white transition;
+}
+.input {
+  @apply w-full border border-navy-200 rounded-md px-4 py-2.5 text-navy-900 focus:outline-none focus:ring-2 focus:ring-gold-400 focus:border-transparent;
+}
+.label {
+  @apply block text-sm font-medium text-navy-700 mb-1;
+}
+.card {
+  @apply bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition;
+}
+.container-x {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+}
