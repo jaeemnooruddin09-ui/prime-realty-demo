@@ -6,7 +6,10 @@
 
 html, body {
   @apply text-navy-900 bg-white antialiased;
+  overflow-x: hidden;
+  max-width: 100vw;
 }
+body { position: relative; }
 
 .btn-primary {
   @apply inline-flex items-center justify-center bg-navy-900 text-white px-6 py-3 rounded-md font-medium hover:bg-navy-800 transition;
