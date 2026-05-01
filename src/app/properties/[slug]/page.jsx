@@ -9,6 +9,11 @@ import Gallery from '@/components/Gallery';
 import MortgageCalculator from '@/components/MortgageCalculator';
 import PropertyMedia from '@/components/PropertyMedia';
 import Price from '@/components/Price';
+import FavoriteButton from '@/components/FavoriteButton';
+import CompareButton from '@/components/CompareButton';
+import ShareButtons from '@/components/ShareButtons';
+import RecordView from '@/components/RecordView';
+import RecentlyViewed from '@/components/RecentlyViewed';
 
 export async function generateMetadata({ params }) {
   const db = getDb();
@@ -75,6 +80,7 @@ export default function PropertyDetail({ params }) {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <RecordView propertyId={property.id} />
 
       <section className="bg-white border-b border-navy-100">
         <div className="container-x py-6 text-sm text-navy-500">
@@ -104,6 +110,12 @@ export default function PropertyDetail({ params }) {
               </div>
             </div>
             <Price amount={property.price} listingType={property.listing_type} className="text-3xl font-bold text-navy-900" />
+          </div>
+
+          <div className="mt-5 flex flex-wrap items-center gap-2">
+            <FavoriteButton propertyId={property.id} variant="inline" />
+            <CompareButton propertyId={property.id} />
+            <div className="ml-auto"><ShareButtons title={property.title} /></div>
           </div>
 
           <div className="mt-7 grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -180,6 +192,8 @@ export default function PropertyDetail({ params }) {
           </div>
         </section>
       ) : null}
+
+      <RecentlyViewed excludeId={property.id} />
     </>
   );
 }

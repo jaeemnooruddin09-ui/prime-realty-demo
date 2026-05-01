@@ -3,6 +3,7 @@ import { getDb } from '@/lib/db';
 import { getSiteSettings } from '@/lib/settings';
 import SearchHero from '@/components/SearchHero';
 import PropertyCard from '@/components/PropertyCard';
+import RecentlyViewed from '@/components/RecentlyViewed';
 
 export const dynamic = 'force-dynamic';
 
@@ -87,6 +88,8 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      <RecentlyViewed title="Recently viewed" />
 
       <section className="container-x py-20 text-center">
         <h2 className="font-display text-4xl text-navy-900 font-semibold">Ready to find your next home?</h2>

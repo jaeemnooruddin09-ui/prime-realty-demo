@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { PROPERTY_TYPES } from '@/lib/site';
+import SearchAutocomplete from './SearchAutocomplete';
 
 export default function SearchHero() {
   const router = useRouter();
@@ -29,7 +30,7 @@ export default function SearchHero() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
         <div className="md:col-span-2">
           <label className="label">Location or keyword</label>
-          <input value={query} onChange={(e) => setQuery(e.target.value)} className="input" placeholder="e.g. New York, beachfront" />
+          <SearchAutocomplete value={query} onChange={setQuery} placeholder="e.g. New York, beachfront" />
         </div>
         <div>
           <label className="label">Property type</label>

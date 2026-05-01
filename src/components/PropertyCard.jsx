@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { parsePhotos } from '@/lib/site';
 import { useLocale } from './LocaleProvider';
+import FavoriteButton from './FavoriteButton';
 
 export default function PropertyCard({ property }) {
   const { formatPrice, dict } = useLocale();
@@ -14,6 +15,7 @@ export default function PropertyCard({ property }) {
     <Link href={`/properties/${property.slug}`} className="card group block">
       <div className="relative aspect-[4/3] overflow-hidden bg-navy-100">
         <img src={cover} alt={property.title} className="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+        <FavoriteButton propertyId={property.id} variant="overlay" />
         <div className="absolute top-3 left-3 flex gap-2">
           <span className={`text-xs font-semibold px-3 py-1 rounded-full ${property.listing_type === 'rent' ? 'bg-navy-900 text-white' : 'bg-gold-400 text-navy-950'}`}>
             {property.listing_type === 'rent' ? dict.property.forRent : dict.property.forSale}
