@@ -25,14 +25,14 @@ export default function AuditLogPage({ searchParams = {} }) {
       <h1 className="font-display text-3xl font-semibold text-navy-900">Audit log</h1>
       <p className="text-navy-500 mt-1">{total} {total === 1 ? 'entry' : 'entries'}. Newest first.</p>
 
-      <div className="mt-6 bg-white border border-navy-100 rounded overflow-x-auto">
-        <table className="w-full text-sm min-w-[600px]">
+      <div className="mt-6 hidden md:block bg-white border border-navy-100 rounded">
+        <table className="w-full text-sm table-fixed">
           <thead className="bg-navy-50 text-navy-700">
             <tr>
-              <th className="text-left p-3">When</th>
-              <th className="text-left p-3">Actor</th>
-              <th className="text-left p-3">Action</th>
-              <th className="text-left p-3">Resource</th>
+              <th className="text-left p-3 w-44">When</th>
+              <th className="text-left p-3 w-32">Actor</th>
+              <th className="text-left p-3 w-28">Action</th>
+              <th className="text-left p-3 w-40">Resource</th>
               <th className="text-left p-3">Details</th>
             </tr>
           </thead>
@@ -43,14 +43,33 @@ export default function AuditLogPage({ searchParams = {} }) {
             {rows.map(r => (
               <tr key={r.id}>
                 <td className="p-3 text-navy-700 whitespace-nowrap">{new Date(r.created_at * 1000).toLocaleString()}</td>
-                <td className="p-3 text-navy-700 whitespace-nowrap">{r.actor}</td>
+                <td className="p-3 text-navy-700 break-words">{r.actor}</td>
                 <td className="p-3"><span className="text-xs font-semibold bg-navy-100 text-navy-700 rounded px-2 py-0.5">{r.action}</span></td>
-                <td className="p-3 text-navy-700">{r.resource_type}{r.resource_id ? ` · #${r.resource_id}` : ''}</td>
-                <td className="p-3 text-xs text-navy-600 font-mono break-words">{fmtDetails(r.details)}</td>
+                <td className="p-3 text-navy-700 break-words">{r.resource_type}{r.resource_id ? ` · #${r.resource_id}` : ''}</td>
+                <td className="p-3 text-xs text-navy-600 font-mono break-all">{fmtDetails(r.details)}</td>
               </tr>
             ))}
           </tbody>
         </table>
+      </div>
+
+      <div className="mt-6 md:hidden space-y-3">
+        {rows.length === 0 ? (
+          <div className="bg-white border border-navy-100 rounded p-8 text-center text-navy-500">No entries yet.</div>
+        ) : null}
+        {rows.map(r => (
+          <div key={r.id} className="bg-white border border-navy-100 rounded p-3">
+            <div className="flex items-center justify-between gap-2 flex-wrap">
+              <span className="text-xs font-semibold bg-navy-100 text-navy-700 rounded px-2 py-0.5">{r.action}</span>
+              <span className="text-xs text-navy-500">{new Date(r.created_at * 1000).toLocaleString()}</span>
+            </div>
+            <div className="mt-2 text-sm text-navy-900 font-medium break-words">{r.actor}</div>
+            <div className="text-xs text-navy-600 mt-0.5 break-words">{r.resource_type}{r.resource_id ? ` · #${r.resource_id}` : ''}</div>
+            {r.details ? (
+              <div className="mt-2 text-xs text-navy-600 font-mono break-all bg-navy-50 rounded p-2">{fmtDetails(r.details)}</div>
+            ) : null}
+          </div>
+        ))}
       </div>
 
       {totalPages > 1 ? (
