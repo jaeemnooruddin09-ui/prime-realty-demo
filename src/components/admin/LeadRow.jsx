@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { LEAD_STATUSES, leadStatusColor } from '@/lib/audit';
+import { LEAD_STATUSES, leadStatusColor } from '@/lib/lead-status';
 
 export default function LeadRow({ lead, agents = [] }) {
   const router = useRouter();
