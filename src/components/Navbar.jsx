@@ -24,6 +24,8 @@ export default function Navbar({ brand = {} }) {
           <Link href="/" className="hover:text-gold-500">{dict.nav.home}</Link>
           <Link href="/properties" className="hover:text-gold-500">{dict.nav.properties}</Link>
           <Link href="/agents" className="hover:text-gold-500">{dict.nav.agents}</Link>
+          <Link href="/open-houses" className="hover:text-gold-500">Open houses</Link>
+          <Link href="/blog" className="hover:text-gold-500">Insights</Link>
           <Link href="/about" className="hover:text-gold-500">{dict.nav.about}</Link>
           <Link href="/contact" className="hover:text-gold-500">{dict.nav.contact}</Link>
         </nav>
@@ -53,7 +55,10 @@ export default function Navbar({ brand = {} }) {
             <Link href="/" onClick={() => setOpen(false)} className="py-2 hover:text-gold-500">{dict.nav.home}</Link>
             <Link href="/properties" onClick={() => setOpen(false)} className="py-2 hover:text-gold-500">{dict.nav.properties}</Link>
             <Link href="/agents" onClick={() => setOpen(false)} className="py-2 hover:text-gold-500">{dict.nav.agents}</Link>
+            <Link href="/open-houses" onClick={() => setOpen(false)} className="py-2 hover:text-gold-500">Open houses</Link>
+            <Link href="/blog" onClick={() => setOpen(false)} className="py-2 hover:text-gold-500">Insights</Link>
             <Link href="/about" onClick={() => setOpen(false)} className="py-2 hover:text-gold-500">{dict.nav.about}</Link>
+            <Link href="/faq" onClick={() => setOpen(false)} className="py-2 hover:text-gold-500">FAQ</Link>
             <Link href="/contact" onClick={() => setOpen(false)} className="py-2 hover:text-gold-500">{dict.nav.contact}</Link>
             <Link href="/favorites" onClick={() => setOpen(false)} className="py-2 hover:text-gold-500">Saved properties</Link>
             <Link href="/compare" onClick={() => setOpen(false)} className="py-2 hover:text-gold-500">Compare</Link>

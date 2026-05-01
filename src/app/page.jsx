@@ -4,6 +4,9 @@ import { getSiteSettings } from '@/lib/settings';
 import SearchHero from '@/components/SearchHero';
 import PropertyCard from '@/components/PropertyCard';
 import RecentlyViewed from '@/components/RecentlyViewed';
+import TestimonialsSection from '@/components/TestimonialsSection';
+import PressBar from '@/components/PressBar';
+import LeadMagnetSection from '@/components/LeadMagnetSection';
 
 export const dynamic = 'force-dynamic';
 
@@ -89,7 +92,13 @@ export default function HomePage() {
         </div>
       </section>
 
+      <PressBar />
+
+      <TestimonialsSection />
+
       <RecentlyViewed title="Recently viewed" />
+
+      <LeadMagnetSection />
 
       <section className="container-x py-20 text-center">
         <h2 className="font-display text-4xl text-navy-900 font-semibold">Ready to find your next home?</h2>

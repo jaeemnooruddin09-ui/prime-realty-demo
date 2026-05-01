@@ -74,13 +74,88 @@ function init(db) {
     CREATE INDEX IF NOT EXISTS idx_props_type ON properties(type);
     CREATE INDEX IF NOT EXISTS idx_props_status ON properties(status);
     CREATE INDEX IF NOT EXISTS idx_props_featured ON properties(featured);
+
+    CREATE TABLE IF NOT EXISTS blog_posts (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      slug TEXT UNIQUE NOT NULL,
+      title TEXT NOT NULL,
+      excerpt TEXT NOT NULL,
+      body TEXT NOT NULL,
+      cover TEXT NOT NULL,
+      author TEXT NOT NULL,
+      category TEXT NOT NULL DEFAULT 'Insights',
+      reading_minutes INTEGER NOT NULL DEFAULT 5,
+      published_at INTEGER NOT NULL DEFAULT (strftime('%s','now')),
+      status TEXT NOT NULL DEFAULT 'published'
+    );
+
+    CREATE TABLE IF NOT EXISTS testimonials (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      title TEXT NOT NULL,
+      quote TEXT NOT NULL,
+      photo TEXT,
+      rating INTEGER NOT NULL DEFAULT 5,
+      featured INTEGER NOT NULL DEFAULT 0,
+      created_at INTEGER NOT NULL DEFAULT (strftime('%s','now'))
+    );
+
+    CREATE TABLE IF NOT EXISTS open_houses (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      property_id INTEGER NOT NULL,
+      starts_at INTEGER NOT NULL,
+      ends_at INTEGER NOT NULL,
+      host_agent_id INTEGER,
+      capacity INTEGER NOT NULL DEFAULT 20,
+      notes TEXT,
+      created_at INTEGER NOT NULL DEFAULT (strftime('%s','now')),
+      FOREIGN KEY (property_id) REFERENCES properties(id),
+      FOREIGN KEY (host_agent_id) REFERENCES agents(id)
+    );
+
+    CREATE TABLE IF NOT EXISTS subscribers (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      email TEXT UNIQUE NOT NULL,
+      source TEXT NOT NULL DEFAULT 'newsletter',
+      created_at INTEGER NOT NULL DEFAULT (strftime('%s','now'))
+    );
+
+    CREATE TABLE IF NOT EXISTS leads (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      enquiry_id INTEGER UNIQUE NOT NULL,
+      status TEXT NOT NULL DEFAULT 'new',
+      assigned_agent_id INTEGER,
+      notes TEXT,
+      updated_at INTEGER NOT NULL DEFAULT (strftime('%s','now')),
+      FOREIGN KEY (enquiry_id) REFERENCES enquiries(id),
+      FOREIGN KEY (assigned_agent_id) REFERENCES agents(id)
+    );
+
+    CREATE TABLE IF NOT EXISTS audit_log (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      actor TEXT NOT NULL,
+      action TEXT NOT NULL,
+      resource_type TEXT NOT NULL,
+      resource_id INTEGER,
+      details TEXT,
+      created_at INTEGER NOT NULL DEFAULT (strftime('%s','now'))
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_blog_status ON blog_posts(status);
+    CREATE INDEX IF NOT EXISTS idx_blog_published ON blog_posts(published_at);
+    CREATE INDEX IF NOT EXISTS idx_open_houses_starts ON open_houses(starts_at);
+    CREATE INDEX IF NOT EXISTS idx_audit_created ON audit_log(created_at);
   `);
   ensureColumn(db, 'properties', 'floor_plans', "TEXT NOT NULL DEFAULT '[]'");
   ensureColumn(db, 'properties', 'virtual_tour_url', 'TEXT');
   ensureColumn(db, 'properties', 'country', "TEXT NOT NULL DEFAULT 'United States'");
+  ensureColumn(db, 'properties', 'price_history', "TEXT NOT NULL DEFAULT '[]'");
   db.exec(`CREATE TABLE IF NOT EXISTS settings (key TEXT PRIMARY KEY, value TEXT NOT NULL)`);
   seedAgents(db);
   seedLuxuryCatalog(db);
+  seedBlog(db);
+  seedTestimonials(db);
+  seedOpenHouses(db);
   seedSettings(db);
 }
 
@@ -377,6 +452,201 @@ function seedLuxuryCatalog(db) {
       agent_id: p.agent_id,
       floor_plans: '[]',
       virtual_tour_url: null,
+    });
+  });
+}
+
+function seedBlog(db) {
+  const c = db.prepare('SELECT COUNT(*) as c FROM blog_posts').get().c;
+  if (c > 0) return;
+  const insert = db.prepare(`
+    INSERT OR IGNORE INTO blog_posts (slug, title, excerpt, body, cover, author, category, reading_minutes, published_at, status)
+    VALUES (@slug, @title, @excerpt, @body, @cover, @author, @category, @reading_minutes, @published_at, 'published')
+  `);
+  const now = Math.floor(Date.now() / 1000);
+  const day = 86400;
+  const posts = [
+    {
+      slug: 'luxury-market-report-q1-2026',
+      title: 'Luxury Market Report: Q1 2026 trends across our seven markets',
+      excerpt: 'Trophy property prices held firm in London and New York while Marbella and Tuscany saw double-digit growth. Here is what our data shows.',
+      cover: 'https://images.pexels.com/photos/1029599/pexels-photo-1029599.jpeg?auto=compress&cs=tinysrgb&w=1600',
+      author: 'Sarah Mitchell',
+      category: 'Market Reports',
+      reading_minutes: 7,
+      published_at: now - 7 * day,
+      body: `<p>The first quarter of 2026 has continued the resilience we observed in late 2025. Across our seven primary markets, transaction volume rose 8 percent year on year, while average price per square foot at the upper end advanced 4 to 12 percent depending on the city.</p>
+<h2>London: stable, narrow inventory</h2>
+<p>Mayfair and Belgravia remained the strongest sub-markets, with Park Lane apartments commanding pricing premiums of 18 percent versus comparable units two streets back. Inventory remains tight, with average days on market falling to 71 from 92 a year ago.</p>
+<h2>New York: trophy returns</h2>
+<p>Above $20 million, Manhattan saw 23 closings in Q1, the strongest opening quarter since 2022. Park Avenue and Central Park West retained their dominance.</p>
+<h2>Marbella and the Costa del Sol</h2>
+<p>The clear standout: La Zagaleta and Sierra Blanca pricing rose 14 percent, driven by international buyers from Northern Europe and the Gulf seeking second residences with golf and concierge security.</p>
+<h2>Looking ahead</h2>
+<p>We expect interest rate stabilisation to support a stronger second half. Buyers who held off through 2024 to 2025 are returning, particularly to the family-house segment.</p>`,
+    },
+    {
+      slug: 'first-time-luxury-buyer-guide',
+      title: 'A first-time buyer guide to the luxury market',
+      excerpt: 'Buying a first $5M home is different from buying a $500K starter. Here is what changes, from inspections to negotiation strategy.',
+      cover: 'https://images.pexels.com/photos/1438832/pexels-photo-1438832.jpeg?auto=compress&cs=tinysrgb&w=1600',
+      author: 'James Okafor',
+      category: 'Guides',
+      reading_minutes: 9,
+      published_at: now - 14 * day,
+      body: `<p>The luxury segment behaves differently from the broader market in three important ways: pricing transparency, the role of off-market inventory, and the structure of negotiation.</p>
+<h2>Listing prices are not what you think</h2>
+<p>In the trophy segment, the published price is often a reference point rather than a target. We have closed homes at 18 percent below ask and seen others bid 12 percent over.</p>
+<h2>The off-market market</h2>
+<p>Roughly 30 percent of our annual transaction volume happens before a property is publicly listed. If you are searching seriously, your agent relationship matters more than any property portal.</p>
+<h2>Inspections become forensic</h2>
+<p>For a $10M property, a basic visual inspection is insufficient. Plan on a thermal imaging survey, a structural engineer, an HVAC specialist, and on coastal homes, a saltwater corrosion review.</p>
+<h2>Negotiation is relational</h2>
+<p>At this level, sellers care who buys their home. We routinely include a personal letter from the buyer with our offer.</p>`,
+    },
+    {
+      slug: 'why-marbella-is-hot-2026',
+      title: 'Why Marbella is the strongest second-home market of 2026',
+      excerpt: 'Five forces are pushing capital into the Costa del Sol. We look at the data, the demographics, and what it means for buyers.',
+      cover: 'https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=1600',
+      author: 'Sarah Mitchell',
+      category: 'Markets',
+      reading_minutes: 6,
+      published_at: now - 21 * day,
+      body: `<p>Marbella has been quietly redefining itself. Once known for sunny villas and golf, the Costa del Sol has reorganised around three pillars: ultra-prime gated communities, year-round international schools, and an explicitly tax-friendly residence regime.</p>
+<h2>The Beckham Law effect</h2>
+<p>Spain's special expat tax regime, sometimes called the Beckham Law, caps income tax at a flat 24 percent for new residents for six years. This has attracted finance and tech families from London and Frankfurt.</p>
+<h2>La Zagaleta and the gated premium</h2>
+<p>La Zagaleta now trades at a meaningful premium to Sierra Blanca. The Hill District and the new Real de la Quinta development continue this trend, with private security and concierge being the deciding factor for many buyers.</p>
+<h2>What we are seeing</h2>
+<p>Most active buyer profiles in 2026: London families seeking a year-round base, Northern European retirees, and Gulf-region investors building second-residence portfolios.</p>`,
+    },
+    {
+      slug: 'staging-for-the-luxury-market',
+      title: 'Staging at the top end: what actually moves a $10M property',
+      excerpt: 'Forget bowls of lemons. Real luxury staging is about lifestyle proof, scent design, and sequencing. We share our playbook.',
+      cover: 'https://images.pexels.com/photos/1571470/pexels-photo-1571470.jpeg?auto=compress&cs=tinysrgb&w=1600',
+      author: 'Priya Shah',
+      category: 'Insider',
+      reading_minutes: 5,
+      published_at: now - 30 * day,
+      body: `<p>Generic staging is fine for a $700K home. At $10M, the standard does not move the needle. Here is what we have learned.</p>
+<h2>Lifestyle proof</h2>
+<p>We bring the lifestyle into focus. The wine cellar should have wine. The cigar room should smell of cedar. The catering kitchen needs to look like it has prepared three dinners this week.</p>
+<h2>Scent design</h2>
+<p>Every property should have a single, unobtrusive scent signature. We work with fragrance designers to specify a custom blend per home. It costs little and is remembered.</p>
+<h2>Sequencing</h2>
+<p>The order in which a buyer experiences spaces matters as much as the spaces themselves. We script viewings to peak at the property's strongest moment, not start with it.</p>
+<h2>One thing to avoid</h2>
+<p>Empty rooms. Even one empty room communicates abandonment. We furnish every space, even if minimally.</p>`,
+    },
+    {
+      slug: 'tax-tips-international-buyers',
+      title: 'A simple checklist for international buyers',
+      excerpt: 'Buying across borders adds tax, residency, and currency complexity. Use this checklist before you sign anything.',
+      cover: 'https://images.pexels.com/photos/2089696/pexels-photo-2089696.jpeg?auto=compress&cs=tinysrgb&w=1600',
+      author: 'James Okafor',
+      category: 'Guides',
+      reading_minutes: 4,
+      published_at: now - 45 * day,
+      body: `<h2>1. Tax residency</h2>
+<p>Where you spend more than 183 days a year matters. Several countries trigger a tax residency test more aggressively, particularly Spain, Italy, France, and the United Kingdom.</p>
+<h2>2. Stamp duty and equivalents</h2>
+<p>UK Stamp Duty Land Tax, French notaire fees, and Italian imposta di registro all behave differently. Budget 4 to 12 percent on top of purchase price.</p>
+<h2>3. Currency</h2>
+<p>Lock in a forward contract for large purchases if a 5 percent FX swing materially changes the deal. Most international buyers we work with do.</p>
+<h2>4. Banking and proof of funds</h2>
+<p>Have your proof of funds letter dated within the last 30 days. Sellers and lawyers will ask for it.</p>
+<h2>5. Power of attorney</h2>
+<p>Notarised, apostilled, in the destination language. Always.</p>`,
+    },
+  ];
+  posts.forEach(p => insert.run(p));
+}
+
+function seedTestimonials(db) {
+  const c = db.prepare('SELECT COUNT(*) as c FROM testimonials').get().c;
+  if (c > 0) return;
+  const insert = db.prepare(`
+    INSERT OR IGNORE INTO testimonials (name, title, quote, photo, rating, featured)
+    VALUES (@name, @title, @quote, @photo, @rating, @featured)
+  `);
+  const items = [
+    {
+      name: 'David and Helena Karlsson',
+      title: 'Bought in Marbella',
+      quote: 'After three months and four agents in two countries, Sarah found us our home in two viewings. We finally felt understood and not just sold to.',
+      photo: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=400',
+      rating: 5,
+      featured: 1,
+    },
+    {
+      name: 'Andrew Tomlinson',
+      title: 'Sold a London townhouse',
+      quote: 'James handled a complex sale with an off-market introduction that exceeded every expectation. Best in class. We would not work with anyone else.',
+      photo: 'https://images.pexels.com/photos/2182970/pexels-photo-2182970.jpeg?auto=compress&cs=tinysrgb&w=400',
+      rating: 5,
+      featured: 1,
+    },
+    {
+      name: 'The Yamamoto family',
+      title: 'Purchased in New York',
+      quote: 'Priya understood that this was as much about a school district and lifestyle as it was about the apartment. She made the move from Tokyo seamless.',
+      photo: 'https://images.pexels.com/photos/3756679/pexels-photo-3756679.jpeg?auto=compress&cs=tinysrgb&w=400',
+      rating: 5,
+      featured: 1,
+    },
+    {
+      name: 'Rashid Al-Mansouri',
+      title: 'Investor portfolio, multi-market',
+      quote: 'Prime Realty introduced four off-market opportunities I would never have found. Two were the strongest acquisitions in my 2025 portfolio.',
+      photo: 'https://images.pexels.com/photos/2496893/pexels-photo-2496893.jpeg?auto=compress&cs=tinysrgb&w=400',
+      rating: 5,
+      featured: 0,
+    },
+    {
+      name: 'Sophia Bertelli',
+      title: 'Bought in Tuscany',
+      quote: 'Sarah had a sense of taste that matched ours, which is rare. She showed us four properties, all of which we could have lived in. We chose the most beautiful one.',
+      photo: 'https://images.pexels.com/photos/1130626/pexels-photo-1130626.jpeg?auto=compress&cs=tinysrgb&w=400',
+      rating: 5,
+      featured: 0,
+    },
+  ];
+  items.forEach(t => insert.run(t));
+}
+
+function seedOpenHouses(db) {
+  const c = db.prepare('SELECT COUNT(*) as c FROM open_houses').get().c;
+  if (c > 0) return;
+  const props = db.prepare('SELECT id, agent_id FROM properties WHERE status = ? ORDER BY featured DESC, id ASC LIMIT 6').all('available');
+  if (props.length === 0) return;
+  const insert = db.prepare(`
+    INSERT OR IGNORE INTO open_houses (property_id, starts_at, ends_at, host_agent_id, capacity, notes)
+    VALUES (@property_id, @starts_at, @ends_at, @host_agent_id, @capacity, @notes)
+  `);
+  const now = Math.floor(Date.now() / 1000);
+  const day = 86400;
+  const slots = [
+    { offsetDays: 3, startHour: 14, durationHours: 3, notes: 'Refreshments will be served. Strict by-appointment for security.' },
+    { offsetDays: 5, startHour: 11, durationHours: 4, notes: 'Open viewing. Booking recommended.' },
+    { offsetDays: 7, startHour: 16, durationHours: 2, notes: 'Twilight viewing. Wine and canapés.' },
+    { offsetDays: 10, startHour: 12, durationHours: 4, notes: 'By private appointment only.' },
+    { offsetDays: 14, startHour: 13, durationHours: 4, notes: 'Open house with agent walkthrough every 30 minutes.' },
+    { offsetDays: 17, startHour: 15, durationHours: 3, notes: 'Sunset viewing. Champagne reception.' },
+  ];
+  props.forEach((p, i) => {
+    const s = slots[i % slots.length];
+    const dayStart = now + s.offsetDays * day;
+    const startsAt = dayStart - (dayStart % day) + s.startHour * 3600;
+    const endsAt = startsAt + s.durationHours * 3600;
+    insert.run({
+      property_id: p.id,
+      starts_at: startsAt,
+      ends_at: endsAt,
+      host_agent_id: p.agent_id,
+      capacity: 20,
+      notes: s.notes,
     });
   });
 }

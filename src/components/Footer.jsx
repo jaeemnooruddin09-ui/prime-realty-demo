@@ -49,12 +49,17 @@ export default function Footer({ settings }) {
             <li><Link href="/properties?listing_type=buy" className="hover:text-gold-300">Buy</Link></li>
             <li><Link href="/properties?listing_type=rent" className="hover:text-gold-300">Rent</Link></li>
             <li><Link href="/agents" className="hover:text-gold-300">Our agents</Link></li>
+            <li><Link href="/open-houses" className="hover:text-gold-300">Open houses</Link></li>
+            <li><Link href="/favorites" className="hover:text-gold-300">Saved properties</Link></li>
+            <li><Link href="/compare" className="hover:text-gold-300">Compare</Link></li>
           </ul>
         </div>
         <div>
           <h4 className="text-white font-semibold mb-4">Company</h4>
           <ul className="space-y-2 text-sm">
             <li><Link href="/about" className="hover:text-gold-300">About us</Link></li>
+            <li><Link href="/blog" className="hover:text-gold-300">Insights & reports</Link></li>
+            <li><Link href="/faq" className="hover:text-gold-300">FAQ</Link></li>
             <li><Link href="/contact" className="hover:text-gold-300">Contact</Link></li>
             <li><Link href="/admin" className="hover:text-gold-300">Admin</Link></li>
           </ul>
