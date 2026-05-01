@@ -48,6 +48,7 @@ export async function POST(req) {
     logAudit({ action: 'property_create', resourceType: 'property', resourceId: r.lastInsertRowid, details: { slug, title: body.title, status: body.status } });
     return NextResponse.json({ ok: true, id: r.lastInsertRowid, slug });
   } catch (err) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    console.error('[properties:post]', err);
+    return NextResponse.json({ error: 'Could not create property.' }, { status: 500 });
   }
 }

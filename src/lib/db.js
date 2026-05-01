@@ -106,6 +106,7 @@ function init(db) {
       location TEXT,
       rating INTEGER NOT NULL DEFAULT 5,
       message TEXT NOT NULL,
+      approved INTEGER NOT NULL DEFAULT 0,
       created_at INTEGER NOT NULL DEFAULT (strftime('%s','now'))
     );
 
@@ -159,6 +160,7 @@ function init(db) {
   ensureColumn(db, 'properties', 'virtual_tour_url', 'TEXT');
   ensureColumn(db, 'properties', 'country', "TEXT NOT NULL DEFAULT 'United States'");
   ensureColumn(db, 'properties', 'price_history', "TEXT NOT NULL DEFAULT '[]'");
+  ensureColumn(db, 'customer_comments', 'approved', 'INTEGER NOT NULL DEFAULT 0');
   db.exec(`CREATE TABLE IF NOT EXISTS settings (key TEXT PRIMARY KEY, value TEXT NOT NULL)`);
   seedAgents(db);
   seedLuxuryCatalog(db);

@@ -64,7 +64,8 @@ export async function PUT(req, { params }) {
     logAudit({ action: 'property_update', resourceType: 'property', resourceId: id, details: { title: body.title, status: body.status } });
     return NextResponse.json({ ok: true });
   } catch (err) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    console.error('[properties:put]', err);
+    return NextResponse.json({ error: 'Could not update property.' }, { status: 500 });
   }
 }
 

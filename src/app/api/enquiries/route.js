@@ -1,10 +1,22 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
 import { getSiteSettings } from '@/lib/settings';
+import { rateLimit, clientIp } from '@/lib/rate-limit';
 
 export async function POST(req) {
+  const ip = clientIp(req);
+  const limit = rateLimit(`enquiries:${ip}`, { limit: 5, windowMs: 60_000 });
+  if (!limit.ok) {
+    return NextResponse.json(
+      { error: 'Too many requests. Please wait a moment and try again.' },
+      { status: 429, headers: { 'Retry-After': String(limit.retryAfter) } },
+    );
+  }
   try {
     const body = await req.json();
+    if (body && typeof body.company === 'string' && body.company.trim().length > 0) {
+      return NextResponse.json({ ok: true, id: null });
+    }
     const name = (body.name || '').toString().trim();
     const email = (body.email || '').toString().trim();
     const phone = (body.phone || '').toString().trim();
@@ -44,6 +56,7 @@ export async function POST(req) {
 
     return NextResponse.json({ ok: true, id: result.lastInsertRowid });
   } catch (err) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    console.error('[enquiries:post]', err);
+    return NextResponse.json({ error: 'Could not send your enquiry. Please try again.' }, { status: 500 });
   }
 }

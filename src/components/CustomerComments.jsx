@@ -38,6 +38,7 @@ export default function CustomerComments() {
   const [location, setLocation] = useState('');
   const [rating, setRating] = useState(5);
   const [message, setMessage] = useState('');
+  const [company, setCompany] = useState('');
   const [status, setStatus] = useState('idle');
   const [error, setError] = useState('');
 
@@ -63,17 +64,17 @@ export default function CustomerComments() {
       const res = await fetch('/api/comments', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, location, rating, message }),
+        body: JSON.stringify({ name, location, rating, message, company }),
       });
       const j = await res.json();
       if (!res.ok) throw new Error(j.error || 'Could not post comment.');
-      setComments(prev => [j.comment, ...prev]);
       setName('');
       setLocation('');
       setRating(5);
       setMessage('');
+      setCompany('');
       setStatus('sent');
-      setTimeout(() => setStatus('idle'), 3500);
+      setTimeout(() => setStatus('idle'), 6000);
     } catch (err) {
       setStatus('error');
       setError(err.message);
@@ -92,6 +93,9 @@ export default function CustomerComments() {
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
           <form onSubmit={submit} className="lg:col-span-2 bg-navy-50 border border-navy-100 rounded-lg p-6 h-fit">
             <h3 className="font-display text-xl text-navy-900 font-semibold mb-4">Leave a comment</h3>
+            <div aria-hidden="true" style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, overflow: 'hidden' }}>
+              <label>Company<input type="text" tabIndex={-1} autoComplete="off" value={company} onChange={e => setCompany(e.target.value)} /></label>
+            </div>
             <div className="space-y-3">
               <div>
                 <label className="label">Your name</label>
@@ -112,7 +116,7 @@ export default function CustomerComments() {
               <button type="submit" disabled={status === 'sending'} className="btn-primary w-full">
                 {status === 'sending' ? 'Posting...' : 'Post comment'}
               </button>
-              {status === 'sent' ? <div className="text-sm text-emerald-700">Thanks. Your comment is now live below.</div> : null}
+              {status === 'sent' ? <div className="text-sm text-emerald-700">Thanks. Your comment was received and will appear here once reviewed.</div> : null}
               {error ? <div className="text-sm text-red-600">{error}</div> : null}
             </div>
           </form>

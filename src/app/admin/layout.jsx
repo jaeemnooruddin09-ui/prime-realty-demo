@@ -15,6 +15,7 @@ export default function AdminLayout({ children }) {
             <Link href="/admin/properties/new" className="flex-shrink-0 px-3 py-2 rounded hover:bg-navy-50 text-navy-700 whitespace-nowrap">Add property</Link>
             <Link href="/admin/leads" className="flex-shrink-0 px-3 py-2 rounded hover:bg-navy-50 text-navy-700 whitespace-nowrap">Leads</Link>
             <Link href="/admin/enquiries" className="flex-shrink-0 px-3 py-2 rounded hover:bg-navy-50 text-navy-700 whitespace-nowrap">Enquiries</Link>
+            <Link href="/admin/comments" className="flex-shrink-0 px-3 py-2 rounded hover:bg-navy-50 text-navy-700 whitespace-nowrap">Comments</Link>
             <Link href="/admin/agents" className="flex-shrink-0 px-3 py-2 rounded hover:bg-navy-50 text-navy-700 whitespace-nowrap">Agent perf.</Link>
             <Link href="/admin/audit-log" className="flex-shrink-0 px-3 py-2 rounded hover:bg-navy-50 text-navy-700 whitespace-nowrap">Audit log</Link>
             <Link href="/admin/settings" className="flex-shrink-0 px-3 py-2 rounded hover:bg-navy-50 text-navy-700 whitespace-nowrap">Settings</Link>
