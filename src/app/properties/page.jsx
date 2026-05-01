@@ -27,7 +27,7 @@ export default function PropertiesPage({ searchParams }) {
   const minBeds = parseInt(sp.min_beds) || 0;
   const sort = (sp.sort || 'newest').toString();
 
-  const where = ['1=1'];
+  const where = [`status != 'draft'`];
   const params = {};
   if (q) {
     where.push(`(LOWER(title) LIKE @q OR LOWER(address) LIKE @q OR LOWER(city) LIKE @q OR LOWER(country) LIKE @q OR LOWER(description) LIKE @q)`);

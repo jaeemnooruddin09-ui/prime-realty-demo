@@ -24,6 +24,16 @@ export async function POST(req) {
       VALUES (?, ?, ?, ?, ?)
     `).run(propertyId, name, email, phone, message);
 
+    let assignedAgent = null;
+    if (propertyId) {
+      const owner = db.prepare(`SELECT agent_id FROM properties WHERE id = ?`).get(propertyId);
+      if (owner) assignedAgent = owner.agent_id;
+    }
+    db.prepare(`
+      INSERT OR IGNORE INTO leads (enquiry_id, status, assigned_agent_id)
+      VALUES (?, 'new', ?)
+    `).run(result.lastInsertRowid, assignedAgent);
+
     const notifyTo = getSiteSettings().enquiryEmail;
     if (propertyId) {
       const prop = db.prepare(`SELECT p.title, a.email as agent_email, a.name as agent_name FROM properties p JOIN agents a ON p.agent_id = a.id WHERE p.id = ?`).get(propertyId);

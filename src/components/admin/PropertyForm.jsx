@@ -220,6 +220,7 @@ export default function PropertyForm({ agents = [], mode = 'create', property = 
         <div>
           <label className="label">Status</label>
           <select name="status" defaultValue={property?.status || 'available'} className="input">
+            <option value="draft">Draft (hidden from public)</option>
             <option value="available">Available</option>
             <option value="sold">Sold</option>
             <option value="rented">Rented</option>

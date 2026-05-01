@@ -6,7 +6,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://primerealty.exampl
 
 export default function sitemap() {
   const db = getDb();
-  const properties = db.prepare(`SELECT slug, created_at FROM properties WHERE status != 'sold'`).all();
+  const properties = db.prepare(`SELECT slug, created_at FROM properties WHERE status NOT IN ('sold', 'draft')`).all();
   const agents = db.prepare(`SELECT slug FROM agents`).all();
 
   const staticRoutes = ['', '/properties', '/about', '/contact', '/agents'];

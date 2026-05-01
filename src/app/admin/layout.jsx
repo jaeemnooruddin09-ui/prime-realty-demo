@@ -13,7 +13,10 @@ export default function AdminLayout({ children }) {
             <Link href="/admin" className="flex-shrink-0 px-3 py-2 rounded hover:bg-navy-50 text-navy-700 whitespace-nowrap">Dashboard</Link>
             <Link href="/admin/properties" className="flex-shrink-0 px-3 py-2 rounded hover:bg-navy-50 text-navy-700 whitespace-nowrap">Properties</Link>
             <Link href="/admin/properties/new" className="flex-shrink-0 px-3 py-2 rounded hover:bg-navy-50 text-navy-700 whitespace-nowrap">Add property</Link>
+            <Link href="/admin/leads" className="flex-shrink-0 px-3 py-2 rounded hover:bg-navy-50 text-navy-700 whitespace-nowrap">Leads</Link>
             <Link href="/admin/enquiries" className="flex-shrink-0 px-3 py-2 rounded hover:bg-navy-50 text-navy-700 whitespace-nowrap">Enquiries</Link>
+            <Link href="/admin/agents" className="flex-shrink-0 px-3 py-2 rounded hover:bg-navy-50 text-navy-700 whitespace-nowrap">Agent perf.</Link>
+            <Link href="/admin/audit-log" className="flex-shrink-0 px-3 py-2 rounded hover:bg-navy-50 text-navy-700 whitespace-nowrap">Audit log</Link>
             <Link href="/admin/settings" className="flex-shrink-0 px-3 py-2 rounded hover:bg-navy-50 text-navy-700 whitespace-nowrap">Settings</Link>
             <form action="/api/auth/logout" method="POST" className="lg:pt-4 ml-auto lg:ml-0 flex-shrink-0">
               <button className="px-3 py-2 text-sm text-red-600 hover:underline whitespace-nowrap">Sign out</button>

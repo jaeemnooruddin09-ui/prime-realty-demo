@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
 import { isAdmin } from '@/lib/auth';
 import { PROPERTY_TYPES } from '@/lib/site';
+import { logAudit } from '@/lib/audit';
 
 function makeSlug(s) {
   return s.toString().toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
@@ -54,12 +55,13 @@ export async function PUT(req, { params }) {
       lat: parseFloat(body.lat) || 0,
       lng: parseFloat(body.lng) || 0,
       featured: body.featured ? 1 : 0,
-      status: ['available', 'sold', 'rented'].includes(body.status) ? body.status : 'available',
+      status: ['available', 'sold', 'rented', 'draft'].includes(body.status) ? body.status : 'available',
       photos: JSON.stringify(photos),
       agent_id: parseInt(body.agent_id) || 1,
       floor_plans: JSON.stringify(Array.isArray(body.floor_plans) ? body.floor_plans : []),
       virtual_tour_url: (body.virtual_tour_url || '').toString().trim() || null,
     });
+    logAudit({ action: 'property_update', resourceType: 'property', resourceId: id, details: { title: body.title, status: body.status } });
     return NextResponse.json({ ok: true });
   } catch (err) {
     return NextResponse.json({ error: err.message }, { status: 500 });
@@ -69,6 +71,9 @@ export async function PUT(req, { params }) {
 export async function DELETE(_req, { params }) {
   if (!isAdmin()) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const db = getDb();
-  db.prepare('DELETE FROM properties WHERE id = ?').run(parseInt(params.id));
+  const id = parseInt(params.id);
+  const row = db.prepare('SELECT title, slug FROM properties WHERE id = ?').get(id);
+  db.prepare('DELETE FROM properties WHERE id = ?').run(id);
+  logAudit({ action: 'property_delete', resourceType: 'property', resourceId: id, details: row });
   return NextResponse.json({ ok: true });
 }

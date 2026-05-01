@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { getDb } from '@/lib/db';
 import { formatPrice, parsePhotos } from '@/lib/site';
 import DeleteButton from '@/components/admin/DeleteButton';
+import DuplicateButton from '@/components/admin/DuplicateButton';
 import StatusButton from '@/components/admin/StatusButton';
 
 export default function AdminProperties() {
@@ -52,6 +53,7 @@ export default function AdminProperties() {
                   <td className="p-3"><StatusButton id={p.id} status={p.status} /></td>
                   <td className="p-3 text-right whitespace-nowrap">
                     <Link href={`/admin/properties/${p.id}`} className="text-navy-700 hover:text-gold-500 font-semibold mr-3">Edit</Link>
+                    <DuplicateButton id={p.id} />
                     <DeleteButton id={p.id} />
                   </td>
                 </tr>

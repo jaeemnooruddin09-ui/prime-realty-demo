@@ -13,17 +13,17 @@ export async function GET(request) {
 
   const cities = db.prepare(`
     SELECT DISTINCT city as label, country, 'city' as kind
-    FROM properties WHERE LOWER(city) LIKE ? LIMIT 5
+    FROM properties WHERE status != 'draft' AND LOWER(city) LIKE ? LIMIT 5
   `).all(like);
 
   const countries = db.prepare(`
     SELECT DISTINCT country as label, '' as country, 'country' as kind
-    FROM properties WHERE LOWER(country) LIKE ? LIMIT 3
+    FROM properties WHERE status != 'draft' AND LOWER(country) LIKE ? LIMIT 3
   `).all(like);
 
   const titles = db.prepare(`
     SELECT title as label, slug, city, 'property' as kind
-    FROM properties WHERE LOWER(title) LIKE ? OR LOWER(address) LIKE ? LIMIT 5
+    FROM properties WHERE status != 'draft' AND (LOWER(title) LIKE ? OR LOWER(address) LIKE ?) LIMIT 5
   `).all(like, like);
 
   const suggestions = [
