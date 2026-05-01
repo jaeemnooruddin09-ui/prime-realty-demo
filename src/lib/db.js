@@ -169,6 +169,24 @@ function init(db) {
   seedOpenHouses(db);
   seedSettings(db);
   rebrandPrimeRealtyToPrimeForgeHomes(db);
+  fixBadListingPhotos(db);
+}
+
+function fixBadListingPhotos(db) {
+  const flag = db.prepare('SELECT value FROM settings WHERE key = ?').get('migrated_photos_v1');
+  if (flag) return;
+  const url = (id) => `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=1600`;
+  const replacements = {
+    'palm-jumeirah-mansion': [1396132, 261101, 2287310, 1396122, 280229],
+    'tuscan-vineyard-villa': [280229, 1396122, 1396132, 105776, 2287310],
+    'marina-bay-condo':      [1571447, 2079438, 210617, 3214064, 2079431],
+    'brickell-bay-condo':    [2724748, 2724749, 12932050, 1862402, 2079433],
+  };
+  const upd = db.prepare('UPDATE properties SET photos = ? WHERE slug = ?');
+  for (const [slug, ids] of Object.entries(replacements)) {
+    upd.run(JSON.stringify(ids.map(url)), slug);
+  }
+  db.prepare('INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)').run('migrated_photos_v1', '1');
 }
 
 function rebrandPrimeRealtyToPrimeForgeHomes(db) {
@@ -329,7 +347,7 @@ function seedLuxuryCatalog(db) {
       lat: 43.4156, lng: 11.4239,
       featured: 1, agent_id: 1,
       description: 'A storybook villa on twelve hectares of mature Sangiovese vineyards in the Chianti hills. Hand-laid Tuscan stone, antique reclaimed beams, terracotta roofs, and a seventy-foot infinity pool overlooking the valley. Working winery and barrel cellar, private chapel, outdoor pizza oven, and bocce court.',
-      photos: [PHOTO(2102600), PHOTO(2102591), PHOTO(2102592), PHOTO(1648776), PHOTO(2451264)],
+      photos: [PHOTO(280229), PHOTO(1396122), PHOTO(1396132), PHOTO(105776), PHOTO(2287310)],
     },
     {
       slug: 'marbella-cliffside-villa',
@@ -357,7 +375,7 @@ function seedLuxuryCatalog(db) {
       lat: 1.2843, lng: 103.8585,
       featured: 1, agent_id: 2,
       description: 'A 48th-floor sky residence with full Marina Bay panoramas. Italian-designer kitchen, marble-clad spa baths, smart-home automation, and a private balcony. Tower amenities include a 50-meter sky pool, sky garden, residents lounge, and 24-hour concierge with valet.',
-      photos: [PHOTO(271624), PHOTO(271643), PHOTO(271639), PHOTO(271620), PHOTO(271619)],
+      photos: [PHOTO(1571447), PHOTO(2079438), PHOTO(210617), PHOTO(3214064), PHOTO(2079431)],
     },
     {
       slug: 'brickell-bay-condo',
@@ -370,7 +388,7 @@ function seedLuxuryCatalog(db) {
       lat: 25.7616, lng: -80.1881,
       featured: 0, agent_id: 2,
       description: 'A 42nd-floor sky residence with floor-to-ceiling windows on three exposures: ocean, bay, and skyline. Italian designer kitchen, smart-home automation, spa-grade primary bath, two-car garage. Building amenities include rooftop pool deck, fitness lounge, residents-only sky bar, and 24-hour concierge.',
-      photos: [PHOTO(1571453), PHOTO(271694), PHOTO(271667), PHOTO(271800), PHOTO(271816)],
+      photos: [PHOTO(2724748), PHOTO(2724749), PHOTO(12932050), PHOTO(1862402), PHOTO(2079433)],
     },
 
     // ===== MANSIONS (2) =====
@@ -385,7 +403,7 @@ function seedLuxuryCatalog(db) {
       lat: 25.1124, lng: 55.1389,
       featured: 1, agent_id: 1,
       description: 'A signature beachfront villa on the iconic Palm Jumeirah with private 30-meter beach. Floor-to-ceiling glass walls, double-height marble entry, indoor cinema, gym with sea-view spa, and a 25-meter pool with swim-up bar. Sixteen-car gated motor court and private dock.',
-      photos: [PHOTO(2451264), PHOTO(2462015), PHOTO(2462017), PHOTO(2098913), PHOTO(2089698)],
+      photos: [PHOTO(1396132), PHOTO(261101), PHOTO(2287310), PHOTO(1396122), PHOTO(280229)],
     },
     {
       slug: 'hilltop-glass-mansion',
