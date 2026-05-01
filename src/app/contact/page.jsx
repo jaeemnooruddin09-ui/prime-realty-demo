@@ -69,7 +69,7 @@ export default function ContactPage() {
           ) : null}
         </div>
 
-        <div className="bg-white border border-navy-100 rounded-lg p-7 lg:sticky lg:top-24 h-fit">
+        <div className="bg-white border border-navy-100 rounded-lg p-7 h-fit">
           <h2 className="font-display text-3xl font-semibold text-navy-900">Send us a message</h2>
           <p className="text-navy-600 mt-1">We typically respond within a few hours.</p>
           <EnquiryForm />

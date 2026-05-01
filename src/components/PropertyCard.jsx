@@ -30,7 +30,7 @@ export default function PropertyCard({ property }) {
       </div>
       <div className="p-5">
         <div className="text-2xl font-bold text-navy-900">{formatPrice(property.price, property.listing_type)}</div>
-        <div className="mt-1 text-lg font-semibold text-navy-800 line-clamp-2">{property.title}</div>
+        <div className="mt-1 text-lg font-semibold text-navy-800 line-clamp-2 min-h-[3.5rem]">{property.title}</div>
         <div className="text-sm text-navy-500 mt-1 line-clamp-1 flex items-center gap-1">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
           {property.city}{property.country ? `, ${property.country}` : ''}

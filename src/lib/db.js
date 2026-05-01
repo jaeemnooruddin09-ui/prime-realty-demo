@@ -172,6 +172,29 @@ function init(db) {
   fixBadListingPhotos(db);
   rebrandToDemoUrl(db);
   assignListingsToPriya(db);
+  uniqueHeroPhotos(db);
+}
+
+function uniqueHeroPhotos(db) {
+  const flag = db.prepare('SELECT value FROM settings WHERE key = ?').get('migrated_unique_heros_v1');
+  if (flag) return;
+  const url = (id) => `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=1600`;
+  const photoSets = {
+    'palm-jumeirah-mansion':  [1115804, 1396122, 261101, 2287310, 280229],
+    'marbella-cliffside-villa': [1396132, 261101, 2287310, 1396122, 280229],
+    'marina-bay-condo':       [210617, 2079438, 1571447, 3214064, 2079431],
+    'manhattan-sky-penthouse':[1571447, 210617, 2079438, 3214064, 2079431],
+    'hilltop-glass-mansion':  [2284166, 2089696, 2227776, 2079246, 105776],
+    'cotswolds-country-house':[2089696, 2079246, 2284166, 2227776, 105776],
+    'brickell-bay-condo':     [12932050, 2724748, 2724749, 1862402, 2079433],
+    'sydney-harbour-penthouse':[2724748, 2724749, 3214064, 1862402, 12932050],
+    'tuscan-vineyard-villa':  [280229, 105776, 2284166, 2079246, 2287310],
+  };
+  const upd = db.prepare('UPDATE properties SET photos = ? WHERE slug = ?');
+  for (const [slug, ids] of Object.entries(photoSets)) {
+    upd.run(JSON.stringify(ids.map(url)), slug);
+  }
+  db.prepare('INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)').run('migrated_unique_heros_v1', '1');
 }
 
 function rebrandToDemoUrl(db) {
