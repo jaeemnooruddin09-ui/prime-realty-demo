@@ -168,6 +168,23 @@ function init(db) {
   seedTestimonials(db);
   seedOpenHouses(db);
   seedSettings(db);
+  rebrandPrimeRealtyToPrimeForgeHomes(db);
+}
+
+function rebrandPrimeRealtyToPrimeForgeHomes(db) {
+  const flag = db.prepare('SELECT value FROM settings WHERE key = ?').get('migrated_primeforge_v1');
+  if (flag) return;
+  db.exec(`
+    UPDATE agents SET email = REPLACE(email, '@primerealty.example', '@primeforgehomes.example')
+      WHERE email LIKE '%@primerealty.example';
+    UPDATE testimonials SET quote = REPLACE(quote, 'Prime Realty', 'PrimeForge Homes')
+      WHERE quote LIKE '%Prime Realty%';
+    UPDATE settings SET value = REPLACE(value, 'primerealty.example', 'primeforgehomes.example')
+      WHERE value LIKE '%primerealty.example%';
+    UPDATE settings SET value = REPLACE(value, 'Prime Realty', 'PrimeForge Homes')
+      WHERE value LIKE '%Prime Realty%';
+    INSERT OR REPLACE INTO settings (key, value) VALUES ('migrated_primeforge_v1', '1');
+  `);
 }
 
 function seedSettings(db) {
