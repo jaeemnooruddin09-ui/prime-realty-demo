@@ -4,6 +4,8 @@ import Footer from '@/components/Footer';
 import { LocaleProvider } from '@/components/LocaleProvider';
 import { getSiteSettings } from '@/lib/settings';
 
+export const dynamic = 'force-dynamic';
+
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://primerealty.example';
 
 export async function generateMetadata() {

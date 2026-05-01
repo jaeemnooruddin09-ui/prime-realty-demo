@@ -111,7 +111,7 @@ function seedAgents(db) {
   const c = db.prepare('SELECT COUNT(*) as c FROM agents').get().c;
   if (c > 0) return;
   const insert = db.prepare(`
-    INSERT INTO agents (slug, name, title, photo, phone, email, bio)
+    INSERT OR IGNORE INTO agents (slug, name, title, photo, phone, email, bio)
     VALUES (@slug, @name, @title, @photo, @phone, @email, @bio)
   `);
   const agents = [
@@ -153,7 +153,7 @@ function seedLuxuryCatalog(db) {
   if (existing > 0) return;
 
   const insert = db.prepare(`
-    INSERT INTO properties (slug, title, description, price, type, listing_type, bedrooms, bathrooms, size_sqft, address, city, country, lat, lng, featured, status, photos, agent_id, floor_plans, virtual_tour_url)
+    INSERT OR IGNORE INTO properties (slug, title, description, price, type, listing_type, bedrooms, bathrooms, size_sqft, address, city, country, lat, lng, featured, status, photos, agent_id, floor_plans, virtual_tour_url)
     VALUES (@slug, @title, @description, @price, @type, @listing_type, @bedrooms, @bathrooms, @size_sqft, @address, @city, @country, @lat, @lng, @featured, @status, @photos, @agent_id, @floor_plans, @virtual_tour_url)
   `);
 
