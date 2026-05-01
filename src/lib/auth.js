@@ -6,7 +6,12 @@ const COOKIE_NAME = 'pr_admin';
 const SESSION_TTL_SECONDS = 60 * 60 * 24 * 7;
 
 function getSecret() {
-  return process.env.ADMIN_SESSION_SECRET || `pr-fallback-${SITE.adminPassword}`;
+  const v = process.env.ADMIN_SESSION_SECRET;
+  if (v && v.length >= 16) return v;
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error('ADMIN_SESSION_SECRET must be set (16+ chars) in production');
+  }
+  return `pr-dev-${SITE.adminPassword}`;
 }
 
 function sign(payload) {

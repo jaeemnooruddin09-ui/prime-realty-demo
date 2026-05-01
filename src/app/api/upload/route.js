@@ -21,7 +21,11 @@ export async function POST(req) {
       if (buf.length > 8 * 1024 * 1024) {
         return NextResponse.json({ error: `File ${f.name} exceeds 8MB.` }, { status: 400 });
       }
-      const ext = path.extname(f.name || '').toLowerCase().replace(/[^.a-z0-9]/g, '') || '.jpg';
+      const ALLOWED_EXT = new Set(['.jpg', '.jpeg', '.png', '.gif', '.webp', '.avif']);
+      let ext = path.extname(f.name || '').toLowerCase().replace(/[^.a-z0-9]/g, '');
+      if (!ALLOWED_EXT.has(ext)) {
+        return NextResponse.json({ error: 'Only JPG, PNG, GIF, WebP and AVIF images are allowed.' }, { status: 400 });
+      }
       const filename = `${Date.now()}-${crypto.randomBytes(6).toString('hex')}${ext}`;
       await fs.writeFile(path.join(dir, filename), buf);
       urls.push(`/uploads/${filename}`);

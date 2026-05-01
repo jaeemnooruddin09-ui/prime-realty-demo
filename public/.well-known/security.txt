@@ -1,0 +1,3 @@
+Contact: mailto:hello@primeforge-homes.demo
+Preferred-Languages: en
+Canonical: https://primeforge-homes-demo.onrender.com/.well-known/security.txt

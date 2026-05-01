@@ -32,6 +32,19 @@ export async function generateMetadata() {
 }
 
 export default function RootLayout({ children }) {
+  if (process.env.MAINTENANCE_MODE === '1') {
+    return (
+      <html lang="en">
+        <body style={{ fontFamily: 'system-ui, sans-serif', margin: 0, padding: '4rem 1.5rem', textAlign: 'center', color: '#0b1322', background: '#ffffff' }}>
+          <div style={{ maxWidth: 560, margin: '0 auto' }}>
+            <div style={{ fontSize: 12, letterSpacing: 1.5, textTransform: 'uppercase', color: '#a07a1f', fontWeight: 600 }}>Scheduled maintenance</div>
+            <h1 style={{ fontSize: '2.25rem', margin: '0.75rem 0 0.5rem' }}>We will be back shortly.</h1>
+            <p style={{ color: '#4a5568', lineHeight: 1.6 }}>The site is briefly unavailable while we make improvements. Thank you for your patience.</p>
+          </div>
+        </body>
+      </html>
+    );
+  }
   const s = getSiteSettings();
   const orgLd = {
     '@context': 'https://schema.org',

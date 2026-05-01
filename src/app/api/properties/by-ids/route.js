@@ -11,7 +11,12 @@ export async function GET(request) {
 
   const placeholders = ids.map(() => '?').join(',');
   const db = getDb();
-  const rows = db.prepare(`SELECT * FROM properties WHERE id IN (${placeholders})`).all(...ids);
+  const rows = db.prepare(`
+    SELECT id, slug, title, description, price, type, listing_type,
+           bedrooms, bathrooms, size_sqft, address, city, country,
+           lat, lng, featured, status, photos, virtual_tour_url, created_at
+    FROM properties WHERE id IN (${placeholders})
+  `).all(...ids);
 
   const order = new Map(ids.map((id, i) => [id, i]));
   rows.sort((a, b) => (order.get(a.id) ?? 999) - (order.get(b.id) ?? 999));
