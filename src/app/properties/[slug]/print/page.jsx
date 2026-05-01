@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { getDb } from '@/lib/db';
 import { parsePhotos, formatPrice } from '@/lib/site';
 import { getSiteSettings } from '@/lib/settings';
+import PrintButton from '@/components/PrintButton';
 
 export const metadata = { title: 'Print listing' };
 
@@ -70,7 +71,7 @@ export default function PrintListingPage({ params }) {
       </div>
 
       <div className="print:hidden mt-6 flex gap-3">
-        <button onClick={() => typeof window !== 'undefined' && window.print()} className="btn-primary">Print this listing</button>
+        <PrintButton />
         <a href={`/properties/${property.slug}`} className="btn-outline">Back to listing</a>
       </div>
     </div>
