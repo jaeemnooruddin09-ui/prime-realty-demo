@@ -11,6 +11,7 @@ const securityHeaders = [
       "default-src 'self'",
       "base-uri 'self'",
       "frame-ancestors 'none'",
+      "frame-src https://www.google.com https://maps.google.com",
       "form-action 'self'",
       "object-src 'none'",
       "img-src 'self' data: blob: https://images.pexels.com https://images.unsplash.com",
