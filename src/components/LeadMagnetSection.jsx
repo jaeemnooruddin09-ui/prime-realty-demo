@@ -7,7 +7,7 @@ export default function LeadMagnetSection() {
         <div>
           <div className="text-xs uppercase tracking-[0.2em] text-gold-400 font-semibold">Free download</div>
           <h2 className="font-display text-3xl md:text-4xl font-semibold mt-3">2026 Luxury Market Report</h2>
-          <p className="text-white/80 mt-3 max-w-md">52 pages on London, New York, Marbella, Tuscany, Manhattan, Dubai, and Singapore. Pricing benchmarks, days-on-market, and where the smart capital is moving in 2026.</p>
+          <p className="text-white/80 mt-3 max-w-md">52 pages on London, New York, Marbella, Tuscany, Paris, Dubai, and Singapore. Pricing benchmarks, days-on-market, and where the smart capital is moving in 2026.</p>
           <ul className="mt-5 space-y-2 text-white/80">
             <li className="flex gap-2">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-gold-400 flex-shrink-0 mt-0.5"><polyline points="20 6 9 17 4 12"/></svg>

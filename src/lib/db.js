@@ -170,6 +170,33 @@ function init(db) {
   seedSettings(db);
   rebrandPrimeRealtyToPrimeForgeHomes(db);
   fixBadListingPhotos(db);
+  rebrandToDemoUrl(db);
+  assignListingsToPriya(db);
+}
+
+function rebrandToDemoUrl(db) {
+  const flag = db.prepare('SELECT value FROM settings WHERE key = ?').get('migrated_demo_url_v1');
+  if (flag) return;
+  db.exec(`
+    UPDATE agents SET email = REPLACE(email, '@primeforgehomes.example', '@primeforge-homes.demo')
+      WHERE email LIKE '%@primeforgehomes.example';
+    UPDATE settings SET value = REPLACE(value, 'primeforgehomes.example', 'primeforge-homes.demo')
+      WHERE value LIKE '%primeforgehomes.example%';
+    INSERT OR REPLACE INTO settings (key, value) VALUES ('migrated_demo_url_v1', '1');
+  `);
+}
+
+function assignListingsToPriya(db) {
+  const flag = db.prepare('SELECT value FROM settings WHERE key = ?').get('migrated_priya_listings_v1');
+  if (flag) return;
+  const priya = db.prepare("SELECT id FROM agents WHERE slug = 'priya-shah'").get();
+  if (priya) {
+    const upd = db.prepare('UPDATE properties SET agent_id = ? WHERE slug = ?');
+    upd.run(priya.id, 'marina-bay-condo');
+    upd.run(priya.id, 'manhattan-sky-penthouse');
+    upd.run(priya.id, 'tribeca-designer-loft');
+  }
+  db.prepare('INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)').run('migrated_priya_listings_v1', '1');
 }
 
 function fixBadListingPhotos(db) {
@@ -193,11 +220,11 @@ function rebrandPrimeRealtyToPrimeForgeHomes(db) {
   const flag = db.prepare('SELECT value FROM settings WHERE key = ?').get('migrated_primeforge_v1');
   if (flag) return;
   db.exec(`
-    UPDATE agents SET email = REPLACE(email, '@primerealty.example', '@primeforgehomes.example')
+    UPDATE agents SET email = REPLACE(email, '@primerealty.example', '@primeforge-homes.demo')
       WHERE email LIKE '%@primerealty.example';
     UPDATE testimonials SET quote = REPLACE(quote, 'Prime Realty', 'PrimeForge Homes')
       WHERE quote LIKE '%Prime Realty%';
-    UPDATE settings SET value = REPLACE(value, 'primerealty.example', 'primeforgehomes.example')
+    UPDATE settings SET value = REPLACE(value, 'primerealty.example', 'primeforge-homes.demo')
       WHERE value LIKE '%primerealty.example%';
     UPDATE settings SET value = REPLACE(value, 'Prime Realty', 'PrimeForge Homes')
       WHERE value LIKE '%Prime Realty%';
@@ -242,7 +269,7 @@ function seedAgents(db) {
       title: 'Senior Property Consultant',
       photo: 'https://images.pexels.com/photos/3756679/pexels-photo-3756679.jpeg?auto=compress&cs=tinysrgb&w=600',
       phone: '+1 (555) 234-1010',
-      email: 'sarah@primeforgehomes.example',
+      email: 'sarah@primeforge-homes.demo',
       bio: 'With over 12 years of experience in luxury real estate, Sarah has helped hundreds of families find their dream homes. She specializes in waterfront properties and historic estates.',
     },
     {
@@ -251,7 +278,7 @@ function seedAgents(db) {
       title: 'Lead Agent, City Properties',
       photo: 'https://images.pexels.com/photos/2182970/pexels-photo-2182970.jpeg?auto=compress&cs=tinysrgb&w=600',
       phone: '+1 (555) 234-1011',
-      email: 'james@primeforgehomes.example',
+      email: 'james@primeforge-homes.demo',
       bio: 'James brings 9 years of urban property expertise. He has closed over 200 city apartment sales and is fluent in three languages.',
     },
     {
@@ -260,7 +287,7 @@ function seedAgents(db) {
       title: 'Luxury Estate Specialist',
       photo: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=600',
       phone: '+1 (555) 234-1012',
-      email: 'priya@primeforgehomes.example',
+      email: 'priya@primeforge-homes.demo',
       bio: 'Priya represents private estates, penthouses, and premium rentals. She is known for her tireless advocacy and attention to detail.',
     },
   ];
@@ -330,7 +357,7 @@ function seedLuxuryCatalog(db) {
       price: 4850000,
       bedrooms: 3, bathrooms: 3, size_sqft: 3100,
       lat: 40.7180, lng: -74.0046,
-      featured: 1, agent_id: 2,
+      featured: 1, agent_id: 3,
       description: 'A converted-industrial Tribeca loft reimagined by a noted Manhattan studio. 12-foot ceilings, original cast-iron columns, herringbone oak floors, custom Boffi kitchen, hand-plastered baths, and a rare 600-square-foot landscaped terrace. Concierge building, key-locked elevator entry, full-service garage.',
       photos: [PHOTO(1029599), PHOTO(2102587), PHOTO(2079431), PHOTO(2079438), PHOTO(2079433)],
     },
@@ -373,7 +400,7 @@ function seedLuxuryCatalog(db) {
       price: 4250000,
       bedrooms: 3, bathrooms: 3, size_sqft: 2150,
       lat: 1.2843, lng: 103.8585,
-      featured: 1, agent_id: 2,
+      featured: 1, agent_id: 3,
       description: 'A 48th-floor sky residence with full Marina Bay panoramas. Italian-designer kitchen, marble-clad spa baths, smart-home automation, and a private balcony. Tower amenities include a 50-meter sky pool, sky garden, residents lounge, and 24-hour concierge with valet.',
       photos: [PHOTO(1571447), PHOTO(2079438), PHOTO(210617), PHOTO(3214064), PHOTO(2079431)],
     },
@@ -457,7 +484,7 @@ function seedLuxuryCatalog(db) {
       price: 32500000,
       bedrooms: 5, bathrooms: 6, size_sqft: 6500,
       lat: 40.7614, lng: -73.9716,
-      featured: 1, agent_id: 2,
+      featured: 1, agent_id: 3,
       description: 'A trophy 78th-floor penthouse with 360-degree Manhattan views from Central Park to the East River. Private elevator entry, double-height living gallery, custom Italian millwork, gas fireplace, climate-controlled wine display, and a 1,400-square-foot wraparound terrace. White-glove concierge, indoor pool, spa, and squash courts.',
       photos: [PHOTO(1571447), PHOTO(2079438), PHOTO(210617), PHOTO(2079431), PHOTO(3214064)],
     },

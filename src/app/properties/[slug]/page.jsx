@@ -21,8 +21,7 @@ import ScheduleViewing from '@/components/ScheduleViewing';
 export async function generateMetadata({ params }) {
   const db = getDb();
   const p = db.prepare('SELECT * FROM properties WHERE slug = ?').get(params.slug);
-  const s = getSiteSettings();
-  if (!p) return { title: `Property not found | ${s.name}` };
+  if (!p) return { title: 'Property not found' };
   const photos = parsePhotos(p.photos);
   const desc = `${p.bedrooms} bed, ${p.bathrooms} bath ${p.type} in ${p.city}. ${formatPrice(p.price, p.listing_type)}. ${p.description.slice(0, 140)}`;
   return {
