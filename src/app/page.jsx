@@ -5,6 +5,7 @@ import SearchHero from '@/components/SearchHero';
 import PropertyCard from '@/components/PropertyCard';
 import RecentlyViewed from '@/components/RecentlyViewed';
 import TestimonialsSection from '@/components/TestimonialsSection';
+import CustomerComments from '@/components/CustomerComments';
 import PressBar from '@/components/PressBar';
 import LeadMagnetSection from '@/components/LeadMagnetSection';
 
@@ -95,6 +96,8 @@ export default function HomePage() {
       <PressBar />
 
       <TestimonialsSection />
+
+      <CustomerComments />
 
       <RecentlyViewed title="Recently viewed" />
 

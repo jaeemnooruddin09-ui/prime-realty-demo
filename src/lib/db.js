@@ -100,6 +100,15 @@ function init(db) {
       created_at INTEGER NOT NULL DEFAULT (strftime('%s','now'))
     );
 
+    CREATE TABLE IF NOT EXISTS customer_comments (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      location TEXT,
+      rating INTEGER NOT NULL DEFAULT 5,
+      message TEXT NOT NULL,
+      created_at INTEGER NOT NULL DEFAULT (strftime('%s','now'))
+    );
+
     CREATE TABLE IF NOT EXISTS open_houses (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       property_id INTEGER NOT NULL,
