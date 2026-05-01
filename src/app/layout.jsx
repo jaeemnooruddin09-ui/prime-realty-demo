@@ -3,6 +3,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { LocaleProvider } from '@/components/LocaleProvider';
 import { getSiteSettings } from '@/lib/settings';
+import LiveChatWidget from '@/components/LiveChatWidget';
 
 export const dynamic = 'force-dynamic';
 
@@ -26,6 +27,7 @@ export async function generateMetadata() {
     twitter: { card: 'summary_large_image' },
     robots: { index: true, follow: true },
     icons: s.logoUrl ? { icon: s.logoUrl } : undefined,
+    manifest: '/manifest.json',
   };
 }
 
@@ -50,6 +52,7 @@ export default function RootLayout({ children }) {
           <Navbar brand={{ name: s.name, logoUrl: s.logoUrl, phone: s.phone }} />
           <main>{children}</main>
           <Footer settings={s} />
+          <LiveChatWidget />
         </LocaleProvider>
       </body>
     </html>

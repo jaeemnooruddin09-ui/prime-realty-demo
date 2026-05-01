@@ -51,6 +51,7 @@ export default function Footer({ settings }) {
             <li><Link href="/agents" className="hover:text-gold-300">Our agents</Link></li>
             <li><Link href="/open-houses" className="hover:text-gold-300">Open houses</Link></li>
             <li><Link href="/favorites" className="hover:text-gold-300">Saved properties</Link></li>
+            <li><Link href="/saved-searches" className="hover:text-gold-300">Saved searches</Link></li>
             <li><Link href="/compare" className="hover:text-gold-300">Compare</Link></li>
           </ul>
         </div>

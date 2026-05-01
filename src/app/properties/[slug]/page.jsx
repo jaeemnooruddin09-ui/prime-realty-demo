@@ -14,6 +14,9 @@ import CompareButton from '@/components/CompareButton';
 import ShareButtons from '@/components/ShareButtons';
 import RecordView from '@/components/RecordView';
 import RecentlyViewed from '@/components/RecentlyViewed';
+import NeighborhoodPanel from '@/components/NeighborhoodPanel';
+import PriceHistoryChart from '@/components/PriceHistoryChart';
+import ScheduleViewing from '@/components/ScheduleViewing';
 
 export async function generateMetadata({ params }) {
   const db = getDb();
@@ -149,6 +152,15 @@ export default function PropertyDetail({ params }) {
               />
             </div>
           ) : null}
+
+          <PriceHistoryChart history={property.price_history} currentPrice={property.price} createdAt={property.created_at} />
+
+          <NeighborhoodPanel city={property.city} />
+
+          <div className="mt-10 flex items-center gap-3 flex-wrap">
+            <Link href={`/properties/${property.slug}/print`} className="btn-outline">Print or save as PDF</Link>
+            <Link href="/contact" className="btn-outline">Request a private viewing</Link>
+          </div>
         </div>
 
         <aside className="space-y-6 lg:sticky lg:top-24 h-fit">
@@ -177,8 +189,16 @@ export default function PropertyDetail({ params }) {
           </div>
 
           <div className="bg-white border border-navy-100 rounded-lg p-6">
-            <h3 className="font-display text-xl font-semibold text-navy-900">Make an enquiry</h3>
-            <p className="text-sm text-navy-500 mt-1">{agent.name} will respond within one business day.</p>
+            <h3 className="font-display text-xl font-semibold text-navy-900">Schedule a viewing</h3>
+            <p className="text-sm text-navy-500 mt-1">{agent.name} will confirm within one business day.</p>
+            <div className="mt-4">
+              <ScheduleViewing propertyId={property.id} agentName={agent.name} />
+            </div>
+          </div>
+
+          <div className="bg-white border border-navy-100 rounded-lg p-6">
+            <h3 className="font-display text-xl font-semibold text-navy-900">Or send a message</h3>
+            <p className="text-sm text-navy-500 mt-1">Ask any question about this property.</p>
             <EnquiryForm propertyId={property.id} agentName={agent.name} />
           </div>
         </aside>

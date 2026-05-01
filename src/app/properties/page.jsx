@@ -5,6 +5,7 @@ import PropertyFilters from '@/components/PropertyFilters';
 import SortSelect from '@/components/SortSelect';
 import ViewToggle from '@/components/ViewToggle';
 import PropertiesMap from '@/components/PropertiesMap';
+import SaveSearchButton from '@/components/SaveSearchButton';
 import { PROPERTY_TYPES, SITE } from '@/lib/site';
 
 export const metadata = {
@@ -102,7 +103,10 @@ export default function PropertiesPage({ searchParams }) {
                 <ViewToggle value={view} />
                 {!isMap ? <div className="text-sm text-navy-600">Page {page} of {totalPages}</div> : null}
               </div>
-              {!isMap ? <SortSelect value={sort} /> : null}
+              <div className="flex items-center gap-2 flex-wrap">
+                <SaveSearchButton />
+                {!isMap ? <SortSelect value={sort} /> : null}
+              </div>
             </div>
 
             {properties.length === 0 ? (
