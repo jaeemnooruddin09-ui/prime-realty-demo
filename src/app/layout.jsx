@@ -7,7 +7,7 @@ import LiveChatWidget from '@/components/LiveChatWidget';
 
 export const dynamic = 'force-dynamic';
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://primerealty.example';
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://primeforgehomes.example';
 
 export async function generateMetadata() {
   const s = getSiteSettings();

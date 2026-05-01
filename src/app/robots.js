@@ -1,4 +1,4 @@
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://primerealty.example';
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://primeforgehomes.example';
 
 export default function robots() {
   return {

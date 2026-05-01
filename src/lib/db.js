@@ -207,7 +207,7 @@ function seedAgents(db) {
       title: 'Senior Property Consultant',
       photo: 'https://images.pexels.com/photos/3756679/pexels-photo-3756679.jpeg?auto=compress&cs=tinysrgb&w=600',
       phone: '+1 (555) 234-1010',
-      email: 'sarah@primerealty.example',
+      email: 'sarah@primeforgehomes.example',
       bio: 'With over 12 years of experience in luxury real estate, Sarah has helped hundreds of families find their dream homes. She specializes in waterfront properties and historic estates.',
     },
     {
@@ -216,7 +216,7 @@ function seedAgents(db) {
       title: 'Lead Agent, City Properties',
       photo: 'https://images.pexels.com/photos/2182970/pexels-photo-2182970.jpeg?auto=compress&cs=tinysrgb&w=600',
       phone: '+1 (555) 234-1011',
-      email: 'james@primerealty.example',
+      email: 'james@primeforgehomes.example',
       bio: 'James brings 9 years of urban property expertise. He has closed over 200 city apartment sales and is fluent in three languages.',
     },
     {
@@ -225,7 +225,7 @@ function seedAgents(db) {
       title: 'Luxury Estate Specialist',
       photo: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=600',
       phone: '+1 (555) 234-1012',
-      email: 'priya@primerealty.example',
+      email: 'priya@primeforgehomes.example',
       bio: 'Priya represents private estates, penthouses, and premium rentals. She is known for her tireless advocacy and attention to detail.',
     },
   ];
