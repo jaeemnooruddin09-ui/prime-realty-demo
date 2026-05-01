@@ -5,7 +5,7 @@ export default function ShareButtons({ title, url }) {
   const [copied, setCopied] = useState(false);
 
   const link = url || (typeof window !== 'undefined' ? window.location.href : '');
-  const text = title ? `${title} | Prime Realty` : 'Prime Realty listing';
+  const text = title ? `${title} | PrimeForge Homes` : 'PrimeForge Homes listing';
 
   function copy() {
     if (typeof navigator === 'undefined') return;

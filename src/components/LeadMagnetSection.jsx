@@ -32,7 +32,7 @@ export default function LeadMagnetSection() {
             cta="Send me the report"
             className="mt-4"
           />
-          <p className="text-xs text-navy-400 mt-3">By submitting, you consent to receive occasional emails from Prime Realty. Unsubscribe at any time.</p>
+          <p className="text-xs text-navy-400 mt-3">By submitting, you consent to receive occasional emails from PrimeForge Homes. Unsubscribe at any time.</p>
         </div>
       </div>
     </section>

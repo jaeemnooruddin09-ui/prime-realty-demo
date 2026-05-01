@@ -4,7 +4,7 @@ import { getSiteSettings } from '@/lib/settings';
 
 export const metadata = {
   title: 'Insights & Market Reports',
-  description: 'Latest market reports, buyer guides, and insider tips from Prime Realty agents.',
+  description: 'Latest market reports, buyer guides, and insider tips from PrimeForge Homes agents.',
 };
 
 export default function BlogIndexPage() {

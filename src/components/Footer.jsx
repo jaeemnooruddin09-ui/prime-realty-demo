@@ -20,7 +20,7 @@ export default function Footer({ settings }) {
   const social = s.social || {};
   const offices = s.offices || [];
   const logoUrl = s.logoUrl || '/brand/logo-transparent.png';
-  const name = s.name || 'Prime Realty';
+  const name = s.name || 'PrimeForge Homes';
 
   return (
     <footer className="bg-navy-950 text-navy-200 mt-24">

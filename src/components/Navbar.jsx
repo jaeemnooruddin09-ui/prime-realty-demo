@@ -9,7 +9,7 @@ export default function Navbar({ brand = {} }) {
   const [open, setOpen] = useState(false);
   const { dict } = useLocale();
   const logoUrl = brand.logoUrl || '/brand/logo-transparent.png';
-  const name = brand.name || 'Prime Realty';
+  const name = brand.name || 'PrimeForge Homes';
   const phone = brand.phone || '';
 
   return (

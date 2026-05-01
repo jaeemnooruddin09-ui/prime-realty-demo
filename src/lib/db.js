@@ -610,7 +610,7 @@ function seedTestimonials(db) {
     {
       name: 'Rashid Al-Mansouri',
       title: 'Investor portfolio, multi-market',
-      quote: 'Prime Realty introduced four off-market opportunities I would never have found. Two were the strongest acquisitions in my 2025 portfolio.',
+      quote: 'PrimeForge Homes introduced four off-market opportunities I would never have found. Two were the strongest acquisitions in my 2025 portfolio.',
       photo: 'https://images.pexels.com/photos/2496893/pexels-photo-2496893.jpeg?auto=compress&cs=tinysrgb&w=400',
       rating: 5,
       featured: 0,

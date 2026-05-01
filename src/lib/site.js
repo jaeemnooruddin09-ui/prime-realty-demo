@@ -1,5 +1,5 @@
 export const SITE = {
-  name: 'Prime Realty',
+  name: 'PrimeForge Homes',
   tagline: 'Find the home you have always imagined',
   phone: '+1 (555) 234-1000',
   email: 'hello@primerealty.example',
