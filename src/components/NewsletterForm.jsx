@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { readSafeError, networkErrorMessage } from '@/lib/safe-error';
 
 export default function NewsletterForm({ source = 'newsletter', placeholder = 'Your email', cta = 'Subscribe', className = '' }) {
   const [email, setEmail] = useState('');
@@ -8,19 +9,25 @@ export default function NewsletterForm({ source = 'newsletter', placeholder = 'Y
   async function submit(e) {
     e.preventDefault();
     setState({ status: 'loading', message: '' });
+    let r;
     try {
-      const r = await fetch('/api/subscribe', {
+      r = await fetch('/api/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, source }),
       });
-      const data = await r.json();
-      if (!r.ok) throw new Error(data.error || 'Something went wrong.');
-      setState({ status: 'ok', message: data.message || 'You are subscribed.' });
-      setEmail('');
-    } catch (err) {
-      setState({ status: 'error', message: err.message || 'Something went wrong.' });
+    } catch {
+      setState({ status: 'error', message: networkErrorMessage() });
+      return;
     }
+    if (!r.ok) {
+      setState({ status: 'error', message: await readSafeError(r, 'Could not save your subscription. Please try again.') });
+      return;
+    }
+    let data = {};
+    try { data = await r.json(); } catch {}
+    setState({ status: 'ok', message: data.message || 'You are subscribed.' });
+    setEmail('');
   }
 
   return (

@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { readSafeError, networkErrorMessage } from '@/lib/safe-error';
 
 function Stars({ value, onChange }) {
   return (
@@ -60,25 +61,30 @@ export default function CustomerComments() {
     e.preventDefault();
     setStatus('sending');
     setError('');
+    let res;
     try {
-      const res = await fetch('/api/comments', {
+      res = await fetch('/api/comments', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, location, rating, message, company }),
       });
-      const j = await res.json();
-      if (!res.ok) throw new Error(j.error || 'Could not post comment.');
-      setName('');
-      setLocation('');
-      setRating(5);
-      setMessage('');
-      setCompany('');
-      setStatus('sent');
-      setTimeout(() => setStatus('idle'), 6000);
-    } catch (err) {
+    } catch {
       setStatus('error');
-      setError(err.message);
+      setError(networkErrorMessage());
+      return;
     }
+    if (!res.ok) {
+      setStatus('error');
+      setError(await readSafeError(res, 'Could not post your comment. Please try again.'));
+      return;
+    }
+    setName('');
+    setLocation('');
+    setRating(5);
+    setMessage('');
+    setCompany('');
+    setStatus('sent');
+    setTimeout(() => setStatus('idle'), 6000);
   }
 
   return (

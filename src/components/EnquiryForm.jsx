@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { readSafeError, networkErrorMessage } from '@/lib/safe-error';
 
 export default function EnquiryForm({ propertyId = null, agentName = 'us' }) {
   const [status, setStatus] = useState('idle');
@@ -12,22 +13,25 @@ export default function EnquiryForm({ propertyId = null, agentName = 'us' }) {
     const fd = new FormData(e.currentTarget);
     const data = Object.fromEntries(fd.entries());
     if (propertyId) data.property_id = propertyId;
+    let res;
     try {
-      const res = await fetch('/api/enquiries', {
+      res = await fetch('/api/enquiries', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
-      if (!res.ok) {
-        const j = await res.json().catch(() => ({}));
-        throw new Error(j.error || 'Could not send enquiry.');
-      }
-      setStatus('sent');
-      e.target.reset();
-    } catch (err) {
+    } catch {
       setStatus('error');
-      setError(err.message);
+      setError(networkErrorMessage());
+      return;
     }
+    if (!res.ok) {
+      setStatus('error');
+      setError(await readSafeError(res, 'Could not send your enquiry. Please try again.'));
+      return;
+    }
+    setStatus('sent');
+    e.target.reset();
   }
 
   if (status === 'sent') {

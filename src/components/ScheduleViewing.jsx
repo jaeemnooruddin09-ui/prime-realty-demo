@@ -1,5 +1,6 @@
 'use client';
 import { useMemo, useState } from 'react';
+import { readSafeError, networkErrorMessage } from '@/lib/safe-error';
 
 function nextDays(n) {
   const out = [];
@@ -29,20 +30,24 @@ export default function ScheduleViewing({ propertyId, agentName, onSent }) {
     setState({ status: 'loading', message: '' });
     const dateStr = day.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
     const message = `Viewing request for ${dateStr} at ${slot}. Submitted via the schedule-a-viewing widget.`;
+    let r;
     try {
-      const r = await fetch('/api/enquiries', {
+      r = await fetch('/api/enquiries', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, phone, message, property_id: propertyId }),
       });
-      const data = await r.json();
-      if (!r.ok) throw new Error(data.error || 'Could not send.');
-      setState({ status: 'ok', message: `Thanks. ${agentName ? agentName + ' will' : 'Our team will'} confirm within one business day.` });
-      setName(''); setEmail(''); setPhone('');
-      onSent?.();
-    } catch (err) {
-      setState({ status: 'error', message: err.message || 'Could not send.' });
+    } catch {
+      setState({ status: 'error', message: networkErrorMessage() });
+      return;
     }
+    if (!r.ok) {
+      setState({ status: 'error', message: await readSafeError(r, 'Could not send your viewing request. Please try again.') });
+      return;
+    }
+    setState({ status: 'ok', message: `Thanks. ${agentName ? agentName + ' will' : 'Our team will'} confirm within one business day.` });
+    setName(''); setEmail(''); setPhone('');
+    onSent?.();
   }
 
   return (
